@@ -20,6 +20,7 @@ const slides = [
 // recuperation image fleche//
 let leftArrow = document.createElement("img");
 let rightArrow = document.createElement("img");
+let currentIndex = 0;
 
 leftArrow.src = "assets/images/arrow_left.png";
 leftArrow.alt = "arrow left";
@@ -35,24 +36,53 @@ rightArrow.className = 'arrow';
 // Sélectionnez l'élément "arrowDiv" par sa classe
 let arrowDiv = document.querySelector('#banner');
 
-
-
-
-
 // attribution //
 arrowDiv.insertBefore(rightArrow, arrowDiv.querySelector('p'));
 arrowDiv.insertBefore(leftArrow, arrowDiv.querySelector('p'));
 
 
+function updateSlide() {
+  const bannerImg = document.querySelector(".banner-img");
+  const tagLine = document.querySelector("#banner p");
+  const currentSlide = slides[currentIndex];
+  bannerImg.src = `./assets/images/slideshow/${currentSlide.image}`;
+  tagLine.innerHTML = currentSlide.tagLine;
+}
 
-
-// listeneer fleches //
-leftArrow.addEventListener("click", function() {
-  alert("Image gauche cliquée !");
+leftArrow.addEventListener("click", () => {
+  currentIndex = (currentIndex - 1 + slides.length) % slides.length;
+  updateSlide();
+  updateDots();
 });
 
-rightArrow.addEventListener("click", function() {
-  alert("Image droite cliquée !");
+rightArrow.addEventListener("click", () => {
+  currentIndex = (currentIndex + 1) % slides.length;
+  updateSlide();
+  updateDots();
 });
+
+
 //bullet point//
+let bulletDiv = document.querySelector('.dots');
+for (  var i = 0; i <slides.length; i++) {
+
+  let bulletPoint = document.createElement('div');
+  bulletPoint.classList.add('dot');
+  bulletPoint.dataset.index = i;
+  bulletDiv.appendChild(bulletPoint);
+  bulletPoint.addEventListener("click", () => {
+    currentIndex = i;
+    
+  });
+}
+function updateDots() {
+  const dots = document.querySelectorAll(".dot");
+  dots.forEach((dot, index) => {
+    dot.classList.remove("dot_selected");
+    if (index === currentIndex) {
+      dot.classList.add("dot_selected");
+    }
+  });
+}
+
 
